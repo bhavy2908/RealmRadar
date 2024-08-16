@@ -18,6 +18,21 @@ docker run \
         -d my-neo4j
 ```
 
+```bash
+docker exec -it neo4j-container bash
+
+cd /docker-entrypoint.initdb.d
+./initialize.sh
+```
+
 ## Dataset
 
 https://github.com/neo4j-examples/game-of-thrones
+
+
+## toDo
+
+all the descendants of the children are also in the json
+nodes will have 2 objects id and data, data will have all the rest of the fields (for eg type)
+
+extra intehgrate api

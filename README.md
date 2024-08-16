@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Neo4j GoT
 
-## Getting Started
+A Game of Thrones based Node based UI written in NextJS, and some AI ;)
 
-First, run the development server:
+## Features
+
+- Node Based UI to see information about GoT characters, houses and seats.
+- Uses Anthropic's Claude Haiku AI for asking questions
+- Neo4j as our graph database
+
+Using NextJS as our frontend framework and backend written in NodeJS and express.
+
+## Setup locally
+
+NodeJS version: v18.19.0
+
+### UI
 
 ```bash
+# install deps
+npm install
+
+# run the dev version
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Backend
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+First we need to setup the database and fill it up with GoT characters. We use docker for the database.
+The source of dataset from ["An API of Ice and Fire" repository](https://github.com/joakimskoog/AnApiOfIceAndFire).
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```bash
+# make sure you are in the `server/` directory
 
-## Learn More
+# first build the image
+docker build -t got-neo4j .
 
-To learn more about Next.js, take a look at the following resources:
+# create a running container from the image
+docker run -p 7474:7474 -p 7687:7687 --name neo4j-got got-neo4j
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Exec into the container
+docker exec -it neo4j-got bash
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+# New we are going to fill the database with the dataset
+# Inside bash shell in container
 
-## Deploy on Vercel
+cd /docker-entrypoint.initdb.d/
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# execute the script
+./initialize.sh
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+# if you see "CSV import completed", the dataset has been imported.
+# You can now run cypher query on neo4j UI at http://localhost:7474/
+```
+
+Now, setting up the backend. Make sure you have `.env` file for environment variables, or you can hardcode the keys for development purposes.
+
+```bash
+# install deps
+npm install
+
+# run the server
+node index.js
+```
