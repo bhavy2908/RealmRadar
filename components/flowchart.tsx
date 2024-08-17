@@ -399,7 +399,6 @@ const Flow = ({
       fitView();
     });
 
-    // Find the crowned node and set it as the first node data
     const crownedNode = updatedNodes.find((node) => node.data.isCrowned);
     if (crownedNode) {
       setFirstNodeData(crownedNode.data);
