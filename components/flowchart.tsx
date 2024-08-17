@@ -18,7 +18,6 @@ import ReactFlow, {
   useEdgesState,
   useReactFlow,
   ReactFlowProvider,
-  addEdge,
 } from "reactflow";
 import { Crown, Plus, ChevronDown, ChevronUp } from "lucide-react";
 import dagre from "dagre";
@@ -26,7 +25,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import "reactflow/dist/style.css";
 import { Query } from "../utils/types";
 
-type CustomNodeData = {
+interface CustomNodeData {
   label: string;
   isCrowned?: boolean;
   info?: string;
@@ -35,15 +34,20 @@ type CustomNodeData = {
   isExpanded?: boolean;
   type: string;
   setFirstNodeData?: React.Dispatch<React.SetStateAction<CustomNodeData>>;
-};
+  onPlusClick?: (label: string, type: string) => void;
+  gender?: string;
+  culture?: string;
+  born?: string;
+  coat_of_arms?: string;
+  words?: string;
+  region?: string;
+}
 
-const typeToColor = {
-  owns_weapon: "#C80036",
-  holds_title: "#03C988",
-  has_seat: "#FF8F8F",
-  has_alias: "#776AE3",
-  child_of: "#FF9100",
-};
+interface CustomEdgeData {
+  label?: string;
+  type: string;
+  sourceNodeExpanded?: boolean;
+}
 
 const CustomNode = memo(({ data, id }: NodeProps<CustomNodeData>) => {
   const [expanded, setExpanded] = useState(false);
@@ -213,10 +217,16 @@ const getRandomOffset = () => ({
   // offsetY: Math.random() * 20 - 10,
 });
 
-type CustomEdgeData = {
-  label?: string;
-  type: string;
-  sourceNodeExpanded?: boolean;
+interface TypeToColorMap {
+  [key: string]: string;
+}
+
+const typeToColor: TypeToColorMap = {
+  owns_weapon: "#C80036",
+  holds_title: "#03C988",
+  has_seat: "#FF8F8F",
+  has_alias: "#776AE3",
+  child_of: "#FF9100",
 };
 
 const CustomEdge = ({
@@ -242,7 +252,10 @@ const CustomEdge = ({
   const textX = (sourceX + targetX) / 2;
   const textY = (sourceY + targetY) / 2;
 
-  const strokeColor = typeToColor[data?.type] || style.stroke;
+  const strokeColor =
+    data?.type && data.type in typeToColor
+      ? typeToColor[data.type]
+      : style.stroke;
 
   const edgeStyle = { strokeWidth: 2, stroke: strokeColor };
 
@@ -326,8 +339,8 @@ const getLayoutedElements = (
     return {
       ...node,
       type: "custom",
-      targetPosition: isHorizontal ? "left" : "top",
-      sourcePosition: isHorizontal ? "right" : "bottom",
+      targetPosition: isHorizontal ? Position.Left : Position.Top,
+      sourcePosition: isHorizontal ? Position.Right : Position.Bottom,
       position: {
         x: nodeWithPosition.x,
         y: nodeWithPosition.y,
@@ -337,6 +350,7 @@ const getLayoutedElements = (
     };
   });
 };
+
 
 const Flow = ({
   initialNodes,
@@ -354,11 +368,6 @@ const Flow = ({
   const { fitView } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
-  );
 
   const updateLayout = useCallback(() => {
     const layoutedNodes = getLayoutedElements(nodes, edges);
@@ -471,7 +480,6 @@ const Flow = ({
       edges={edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       fitView
@@ -520,7 +528,7 @@ export default function FlowChart({
     {} as CustomNodeData
   );
 
-  const uniqueEdgeTypes = [...new Set(edges.map((edge) => edge.type))];
+  const uniqueEdgeTypes = Array.from(new Set(edges.map((edge) => edge.type)));
 
   return (
     <div className="dotted-bg">
