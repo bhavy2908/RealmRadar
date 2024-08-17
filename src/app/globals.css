@@ -583,8 +583,6 @@ body {
   margin-left: -2%;
 }
 
-
-
 @media screen and (max-width: 1324px) {
   .taskbar {
     padding: 10px 2%;
@@ -624,11 +622,12 @@ body {
   .search-button {
     margin-left: 0;
     margin-right: 3.5%;
+    font-size: 11px;
   }
 
   .new-button.crow-clicked {
     width: 36%;
-    font-size: 16px;
+    font-size: 11px;
     padding: 10px;
     margin-bottom: 10px;
   }
@@ -639,13 +638,13 @@ body {
     width: 100%;
     height: 300px;
   }
-  .dotted-bg{
+  .dotted-bg {
     flex-direction: column;
     height: 100%;
     padding-bottom: 10px;
     margin-bottom: 10px;
   }
-  .about-container{
+  .about-container {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -653,27 +652,28 @@ body {
     gap: 10px;
     padding: 10px;
   }
-  .about{
+  .about {
     width: 38%;
     margin-right: 0;
     flex: 1 1 38%;
   }
-  .about-buttons-container{
+  .about-buttons-container {
     width: 100%;
     margin-top: -10px;
     margin-bottom: -10px;
     display: flex;
     justify-content: space-between;
   }
-  .about-buttons{
+  .about-buttons {
     width: 48.5%;
+    font-size: 11px;
   }
-  .data-row{
+  .data-row {
     /* display: flex;
     flex-direction: column; */
     /* text-align: left; */
   }
-  .legend-item{
+  .legend-item {
     display: flex;
     text-align: center;
     flex-direction: column;
