@@ -1,8 +1,15 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+} from "react";
 import FlowChart from "./flowchart";
 import { Node, Edge } from "reactflow";
 import axios from "axios";
 import { Query } from "../utils/types";
+import { debounce } from "lodash";
 
 interface DataParserProps {
   inodes: Node[];
@@ -31,6 +38,48 @@ const Taskbar: React.FC<{
   const [isCrowClicked, setIsCrowClicked] = useState(false);
   const [crowBtnText, setCrowBtnText] = useState("Ask the Raven");
   const [searchBarValue, setSearchBarValue] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [mockData, setMockData] = useState([]);
+
+  const searchInArray = (searchQuery) => {
+    return mockData.filter((item) =>
+      item.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const debouncedSearch = useCallback(
+    debounce((searchQuery) => {
+      const results = searchInArray(searchQuery);
+      setSuggestions(results);
+      console.log("Suggestions updated:", results); // Debug log
+    }, 300),
+    [mockData] // Added mockData as a dependency
+  );
+
+  const getMockData = async (type) => {
+    try {
+      const response = await axios.get(
+        `https://realm.visanexa.com/search/${type}`
+      );
+      setMockData(response.data);
+      console.log("Mock data fetched:", response.data); // Debug log
+    } catch (error) {
+      console.error("Error fetching mock data:", error);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Current type:", type, "Mock data length:", mockData.length); // Debug log
+    if (type === "character" && mockData.length === 0) {
+      getMockData("character");
+      console.log("Fetching character data"); // Debug log
+    }
+    if (query.length > 2) {
+      debouncedSearch(query);
+    } else {
+      setSuggestions([]);
+    }
+  }, [query, debouncedSearch, mockData, type]);
 
   const handleCrowClick = () => {
     setIsCrowClicked(!isCrowClicked);
@@ -38,60 +87,82 @@ const Taskbar: React.FC<{
   };
 
   return (
-    <div className="taskbar">
-      <div className="flex items-center space-x-4">
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-          className={`taskbar-select rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${
-            isCrowClicked ? "crow-clicked" : ""
-          }`}
-        >
-          <option value="character">Character</option>
-          <option value="house">House</option>
-          <option value="seat">Seat</option>
-        </select>
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Find any house, seat, or character from Westeros, and explore their lore..."
-          className={`taskbar-input flex-grow rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${
-            isCrowClicked ? "crow-clicked" : ""
-          }`}
-        />
-        <button
-          onClick={() => onSearch(type, query)}
-          className={`taskbar-button search-button text-white font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${
-            isCrowClicked ? "crow-clicked" : ""
-          }`}
-        >
-          Search
-        </button>
-        <button
-          onClick={handleCrowClick}
-          className="taskbar-button ask-crow-button text-white font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
-        >
-          {crowBtnText}
-        </button>
-        <input
-          type="text"
-          value={searchBarValue}
-          onChange={(e) => setSearchBarValue(e.target.value)}
-          placeholder="Ask the Three-Eyed Crow anything; he knows all from the Red Keep to the secrets beyond the Wall..."
-          className={`taskbar-input2 flex-grow rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${
-            isCrowClicked ? "crow-clicked" : ""
-          }`}
-        />
-        <button
-          onClick={() => onAISearch(searchBarValue)}
-          className={`taskbar-button new-button text-white font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${
-            isCrowClicked ? "crow-clicked" : ""
-          }`}
-        >
-          Send
-        </button>
+    <div>
+      <div className="taskbar">
+        <div className="flex items-center space-x-4">
+          <select
+            value={type}
+            onChange={(e) => {
+              setType(e.target.value);
+              getMockData(e.target.value);
+            }}
+            className={`taskbar-select rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${
+              isCrowClicked ? "crow-clicked" : ""
+            }`}
+          >
+            <option value="character">Character</option>
+            <option value="house">House</option>
+            <option value="seat">Seat</option>
+          </select>
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Find any house, seat, or character from Westeros, and explore their lore..."
+            className={`taskbar-input flex-grow rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${
+              isCrowClicked ? "crow-clicked" : ""
+            }`}
+          />
+          <button
+            onClick={() => {onSearch(type, query); setSuggestions([])}}
+            className={`taskbar-button search-button text-white font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${
+              isCrowClicked ? "crow-clicked" : ""
+            }`}
+          >
+            Search
+          </button>
+          <button
+            onClick={handleCrowClick}
+            className="taskbar-button ask-crow-button text-white font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+          >
+            {crowBtnText}
+          </button>
+          <input
+            type="text"
+            value={searchBarValue}
+            onChange={(e) => setSearchBarValue(e.target.value)}
+            placeholder="Ask the Three-Eyed Crow anything; he knows all from the Red Keep to the secrets beyond the Wall..."
+            className={`taskbar-input2 flex-grow rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${
+              isCrowClicked ? "crow-clicked" : ""
+            }`}
+          />
+          <button
+            onClick={() => onAISearch(searchBarValue)}
+            className={`taskbar-button new-button text-white font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${
+              isCrowClicked ? "crow-clicked" : ""
+            }`}
+          >
+            Send
+          </button>
+        </div>
       </div>
+      {suggestions.length > 0 && (
+        <div className="suggestions">
+          {suggestions.slice(0,5).map((item, index) => (
+            <div
+              key={index}
+              className="suggestion-item"
+              onClick={() => {
+                setQuery(item);
+                setSuggestions([]);
+                setSuggestions([]);
+              }}
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -407,7 +478,9 @@ const DataParser: React.FC<DataParserProps> = ({ inodes, iedges }) => {
 
   const handleAISearch = async (query: string) => {
     try {
-      const response = await axios.get(`https://realm.visanexa.com/ai/${query}`);
+      const response = await axios.get(
+        `https://realm.visanexa.com/ai/${query}`
+      );
       const { type, name, fact } = response.data;
 
       setAiFact(fact);

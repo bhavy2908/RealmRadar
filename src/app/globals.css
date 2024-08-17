@@ -583,6 +583,34 @@ body {
   margin-left: -2%;
 }
 
+.suggestions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 64.5%;
+  background-color: #0d1117;
+  /* border: 1px solid #ddd; */
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+  margin-left: 12.5%;
+  margin-top: -15px;
+  padding: 10px;
+}
+
+.suggestion-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: white;
+}
+
+.suggestion-item:hover {
+  background-color: #151b22;
+  color: #4caf50;
+}
+
 @media screen and (max-width: 1324px) {
   .taskbar {
     padding: 10px 2%;
@@ -615,7 +643,7 @@ body {
   }
 
   .taskbar-button {
-    width: 48%;
+    width: 61%;
     margin-bottom: 10px;
   }
 
@@ -623,6 +651,8 @@ body {
     margin-left: 0;
     margin-right: 3.5%;
     font-size: 11px;
+    width: 35%;
+    margin-top: -5px;
   }
 
   .new-button.crow-clicked {
@@ -677,5 +707,9 @@ body {
     display: flex;
     text-align: center;
     flex-direction: column;
+  }
+  .suggestions{
+    margin-left: 0;
+    margin-left: 37%;
   }
 }
