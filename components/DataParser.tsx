@@ -126,7 +126,7 @@ const DataParser: React.FC<DataParserProps> = ({ inodes, iedges }) => {
 
   const getUniqueEdgeTypes = (nodeId: string): string[] => {
     const nodeEdges = edges.filter((edge) => edge.source === nodeId);
-    return Array.from(new Set(nodeEdges.map((edge) => edge.type))).sort();
+    return Array.from(new Set(nodeEdges.map((edge) => edge.type ?? ""))).sort();
   };
 
   const createTypeNodes = (
