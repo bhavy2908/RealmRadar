@@ -357,7 +357,7 @@ const DataParser: React.FC<DataParserProps> = ({ inodes, iedges }) => {
 
   const searchCharacter = async (characterName: string) => {
     const response = await axios.get(
-      `http://localhost:4000/api/character/${characterName}`
+      `https://realm.visanexa.com/api/character/${characterName}`
     );
     setNodes(response.data.nodes);
     setEdges(response.data.edges);
@@ -366,7 +366,7 @@ const DataParser: React.FC<DataParserProps> = ({ inodes, iedges }) => {
 
   const searchHouse = async (houseName: string) => {
     const response = await axios.get(
-      `http://localhost:4000/api/house/${houseName}`
+      `https://realm.visanexa.com/api/house/${houseName}`
     );
     setNodes(response.data.nodes);
     setEdges(response.data.edges);
@@ -375,7 +375,7 @@ const DataParser: React.FC<DataParserProps> = ({ inodes, iedges }) => {
 
   const searchSeat = async (seatName: string) => {
     const response = await axios.get(
-      `http://localhost:4000/api/seat/${seatName}`
+      `https://realm.visanexa.com/api/seat/${seatName}`
     );
     setNodes(response.data.nodes);
     setEdges(response.data.edges);
@@ -407,15 +407,13 @@ const DataParser: React.FC<DataParserProps> = ({ inodes, iedges }) => {
 
   const handleAISearch = async (query: string) => {
     try {
-      const response = await axios.get(`http://localhost:4000/ai/${query}`);
+      const response = await axios.get(`https://realm.visanexa.com/ai/${query}`);
       const { type, name, fact } = response.data;
 
       setAiFact(fact);
 
-      // Trigger the appropriate search based on the AI response
       await handleSearch(type, name);
 
-      // Update the main node with the AI fact
       setGraphNodes((prevNodes) => {
         const updatedNodes = [...prevNodes];
         const mainNodeIndex = updatedNodes.findIndex(
