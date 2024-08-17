@@ -35,6 +35,13 @@ type CustomNodeData = {
   isExpanded?: boolean;
   type: string;
   setFirstNodeData?: React.Dispatch<React.SetStateAction<CustomNodeData>>;
+  onPlusClick?: (label: string, type: string) => void;
+  gender?: string;
+  culture?: string;
+  born?: string;
+  coat_of_arms?: string;
+  words?: string;
+  region?: string;
 };
 
 const typeToColor = {
