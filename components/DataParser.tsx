@@ -126,7 +126,7 @@ const DataParser: React.FC<DataParserProps> = ({ inodes, iedges }) => {
 
   const getUniqueEdgeTypes = (nodeId: string): string[] => {
     const nodeEdges = edges.filter((edge) => edge.source === nodeId);
-    return Array.from(new Set(nodeEdges.map((edge) => edge.type ?? ""))).sort();
+    return Array.from(new Set(nodeEdges.map((edge) => edge.type))).sort();
   };
 
   const createTypeNodes = (
@@ -277,7 +277,7 @@ const DataParser: React.FC<DataParserProps> = ({ inodes, iedges }) => {
       ]);
       setGraphEdges(initialGraph.edges);
     }
-  }, [nodes, edges, mainNode, createTypeNodes]);
+  }, [nodes, edges, mainNode]);
 
   const handleHistory: (
     data: Query,
@@ -412,8 +412,10 @@ const DataParser: React.FC<DataParserProps> = ({ inodes, iedges }) => {
 
       setAiFact(fact);
 
+      // Trigger the appropriate search based on the AI response
       await handleSearch(type, name);
 
+      // Update the main node with the AI fact
       setGraphNodes((prevNodes) => {
         const updatedNodes = [...prevNodes];
         const mainNodeIndex = updatedNodes.findIndex(
