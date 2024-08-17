@@ -332,17 +332,21 @@ const edges = [
   },
 ];
 
+const handleClick = () => {
+  window.open("https://github.com/bhavy2908/RealmRadar", "_blank");
+};
+
 export default function Home() {
   return (
     <div>
       <div className="logo-container">
         <img src="/assets/logo.png" width={150}></img>
-        <button className="github-button">
+        <button className="github-button" onClick={handleClick}>
           <img
             src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
             alt="GitHub Logo"
             className="github-logo"
-          ></img>
+          />
           <span className="code">GitHub</span>
         </button>
       </div>
