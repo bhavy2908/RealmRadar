@@ -509,6 +509,8 @@ const LegendItem = ({ type, color }: { type: string; color: string }) => (
   </div>
 );
 
+LegendItem.displayName = "LegendItem";
+
 export default function FlowChart({
   nodes,
   edges,

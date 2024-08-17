@@ -277,7 +277,7 @@ const DataParser: React.FC<DataParserProps> = ({ inodes, iedges }) => {
       ]);
       setGraphEdges(initialGraph.edges);
     }
-  }, [nodes, edges, mainNode]);
+  }, [nodes, edges, mainNode, createTypeNodes]);
 
   const handleHistory: (
     data: Query,
