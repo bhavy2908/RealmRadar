@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "jest",
+    "test:unit": "jest houseController.test.js characterController.test.js seatController.test.js aiController.test.js searchController.test.js",
+    "test:integration": "jest integration.test.js",
+    "test:security": "jest security.test.js",
+    "test:e2e": "jest e2e.test.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -17,5 +23,9 @@
     "helmet": "^7.1.0",
     "neo4j-driver": "^5.23.0",
     "winston": "^3.14.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
   }
 }
