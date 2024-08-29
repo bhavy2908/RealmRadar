@@ -14,6 +14,7 @@ const nodes = [
       type: "character",
       isCrowned: true,
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "3036",
@@ -25,6 +26,7 @@ const nodes = [
       region: "The Crownlands",
       type: "house",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "367",
@@ -33,6 +35,7 @@ const nodes = [
       gender: "male",
       type: "character",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "1754",
@@ -41,6 +44,7 @@ const nodes = [
       gender: "male",
       type: "character",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "1889",
@@ -51,6 +55,7 @@ const nodes = [
       born: "At Sweetsister",
       type: "character",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "2413",
@@ -61,6 +66,7 @@ const nodes = [
       died: "In 299 AC, at Winterfell",
       type: "character",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "1786",
@@ -71,6 +77,7 @@ const nodes = [
       born: "At Runestone",
       type: "character",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "941",
@@ -78,6 +85,7 @@ const nodes = [
       label: "Mhysa",
       type: "alias",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "942",
@@ -85,6 +93,7 @@ const nodes = [
       label: "The Silver Queen",
       type: "alias",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "943",
@@ -92,6 +101,7 @@ const nodes = [
       label: "Silver Lady",
       type: "alias",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "940",
@@ -99,6 +109,7 @@ const nodes = [
       label: "Mother",
       type: "alias",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "945",
@@ -106,6 +117,7 @@ const nodes = [
       label: "The Dragon Queen",
       type: "alias",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "938",
@@ -113,6 +125,7 @@ const nodes = [
       label: "The Unburnt",
       type: "alias",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "944",
@@ -120,6 +133,7 @@ const nodes = [
       label: "Dragonmother",
       type: "alias",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "936",
@@ -127,6 +141,7 @@ const nodes = [
       label: "Dany",
       type: "alias",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "937",
@@ -134,6 +149,7 @@ const nodes = [
       label: "Daenerys Stormborn",
       type: "alias",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "939",
@@ -141,6 +157,7 @@ const nodes = [
       label: "Mother of Dragons",
       type: "alias",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "946",
@@ -148,6 +165,7 @@ const nodes = [
       label: "The Mad King's daughter",
       type: "alias",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "1544",
@@ -157,6 +175,7 @@ const nodes = [
       born: "In 172 AC",
       type: "character",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "3237",
@@ -169,6 +188,7 @@ const nodes = [
       region: "Dorne",
       type: "house",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "2117",
@@ -177,6 +197,7 @@ const nodes = [
       gender: "male",
       type: "character",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "1790",
@@ -186,6 +207,7 @@ const nodes = [
       died: "In 298 AC, at Riverrun",
       type: "character",
     },
+    position: { x: 0, y: 0 },
   },
   {
     id: "1887",
@@ -194,6 +216,7 @@ const nodes = [
       gender: "male",
       type: "character",
     },
+    position: { x: 0, y: 0 },
   },
 ];
 
