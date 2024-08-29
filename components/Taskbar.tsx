@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { debounce } from "lodash";
+import DOMPurify from "dompurify";
 
 interface TaskbarProps {
   onSearch: (type: string, query: string) => void;
@@ -20,9 +21,14 @@ const Taskbar: React.FC<TaskbarProps> = ({ onSearch, onAISearch }) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [mockData, setMockData] = useState<MockData>({});
 
+  const sanitizeInput = (input: string): string => {
+    return DOMPurify.sanitize(input, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
+  };
+
   const searchInArray = (searchQuery: string): string[] => {
+    const sanitizedQuery = sanitizeInput(searchQuery);
     return (mockData[type] || []).filter((item) =>
-      item.toLowerCase().includes(searchQuery.toLowerCase())
+      item.toLowerCase().includes(sanitizedQuery.toLowerCase())
     );
   };
 
@@ -30,7 +36,6 @@ const Taskbar: React.FC<TaskbarProps> = ({ onSearch, onAISearch }) => {
     debounce((searchQuery: string) => {
       const results = searchInArray(searchQuery);
       setSuggestions(results);
-      console.log("Suggestions updated:", results); // Debug log
     }, 300),
     [mockData, type]
   );
@@ -38,25 +43,19 @@ const Taskbar: React.FC<TaskbarProps> = ({ onSearch, onAISearch }) => {
   const getMockData = async (type: string) => {
     try {
       const response = await axios.get<string[]>(
-        `https://realm.visanexa.com/search/${type}`
+        `https://realm.visanexa.com/search/${encodeURIComponent(
+          sanitizeInput(type)
+        )}`
       );
       setMockData((prevState) => ({ ...prevState, [type]: response.data }));
-      console.log("Mock data fetched:", response.data); // Debug log
     } catch (error) {
       console.error("Error fetching mock data:", error);
     }
   };
 
   useEffect(() => {
-    console.log(
-      "Current type:",
-      type,
-      "Mock data length:",
-      mockData[type]?.length
-    ); // Debug log
     if (!mockData[type]) {
       getMockData(type);
-      console.log("Fetching data for type:", type); // Debug log
     }
     if (query.length > 2) {
       debouncedSearch(query);
@@ -70,6 +69,16 @@ const Taskbar: React.FC<TaskbarProps> = ({ onSearch, onAISearch }) => {
     setCrowBtnText(isCrowClicked ? "Ask the Raven" : "Search Manually");
   };
 
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const sanitizedValue = sanitizeInput(e.target.value);
+    setQuery(sanitizedValue);
+  };
+
+  const handleSearchBarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const sanitizedValue = sanitizeInput(e.target.value);
+    setSearchBarValue(sanitizedValue);
+  };
+
   return (
     <div>
       <div className="taskbar">
@@ -77,8 +86,9 @@ const Taskbar: React.FC<TaskbarProps> = ({ onSearch, onAISearch }) => {
           <select
             value={type}
             onChange={(e) => {
-              setType(e.target.value);
-              getMockData(e.target.value);
+              const sanitizedType = sanitizeInput(e.target.value);
+              setType(sanitizedType);
+              getMockData(sanitizedType);
             }}
             className={`taskbar-select rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${
               isCrowClicked ? "crow-clicked" : ""
@@ -91,7 +101,7 @@ const Taskbar: React.FC<TaskbarProps> = ({ onSearch, onAISearch }) => {
           <input
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={handleQueryChange}
             placeholder="Find any house, seat, or character from Westeros, and explore their lore..."
             className={`taskbar-input flex-grow rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${
               isCrowClicked ? "crow-clicked" : ""
@@ -117,7 +127,7 @@ const Taskbar: React.FC<TaskbarProps> = ({ onSearch, onAISearch }) => {
           <input
             type="text"
             value={searchBarValue}
-            onChange={(e) => setSearchBarValue(e.target.value)}
+            onChange={handleSearchBarChange}
             placeholder="Ask the Three-Eyed Crow anything; he knows all from the Red Keep to the secrets beyond the Wall..."
             className={`taskbar-input2 flex-grow rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${
               isCrowClicked ? "crow-clicked" : ""
